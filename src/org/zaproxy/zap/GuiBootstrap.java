@@ -351,9 +351,7 @@ public class GuiBootstrap extends ZapBootstrap {
     	String lookAndFeelClassname = "";
     	OptionsParam options = Model.getSingleton().getOptionsParam();;
     	String lookAndFeelOptions = options.getViewParam().getLookAndFeel();
-        
-    	System.out.println(defaultZapLook);
-    	
+          	
      	if(defaultZapLook == null) {
      		lookAndFeelSet = false;
      	}else{
@@ -370,9 +368,8 @@ public class GuiBootstrap extends ZapBootstrap {
         		lookAndFeelClassname = defaultZapLook;
         	}
         }
-        System.out.println(lookAndFeelClassname);
-        System.out.println(lookAndFeelOptions);
-       
+        
+        
         if ( !lookAndFeelClassname.equals("")) {
             try {
                 UIManager.setLookAndFeel(lookAndFeelClassname);

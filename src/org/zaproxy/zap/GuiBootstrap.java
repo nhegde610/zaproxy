@@ -62,6 +62,8 @@ import org.zaproxy.zap.view.LicenseFrame;
 import org.zaproxy.zap.view.LocaleDialog;
 import org.zaproxy.zap.view.ProxyDialog;
 
+
+
 /**
  * The bootstrap process for GUI mode.
  *
@@ -345,15 +347,36 @@ public class GuiBootstrap extends ZapBootstrap {
      * {@link java.net.InetAddress InetAddress}) preventing some ZAP options from being correctly applied.
      */
     private void setupLookAndFeel() {
-        if (lookAndFeelSet) {
-            return;
+    	String defaultZapLook = System.getProperty("swing.defaultlaf");
+    	String lookAndFeelClassname = "";
+    	OptionsParam options = Model.getSingleton().getOptionsParam();;
+    	String lookAndFeelOptions = options.getViewParam().getLookAndFeel();
+        
+    	System.out.println(defaultZapLook);
+    	
+     	if(defaultZapLook == null) {
+     		lookAndFeelSet = false;
+     	}else{
+     		lookAndFeelSet = true;
+     	}
+     	
+    	
+        if(!lookAndFeelSet) {
+        	if(lookAndFeelOptions.contains("Native")) {
+        		lookAndFeelClassname = UIManager.getSystemLookAndFeelClassName();
+        	} else if(lookAndFeelOptions.contains("Cross")) {
+        		lookAndFeelClassname = UIManager.getCrossPlatformLookAndFeelClassName();
+        	} else if(lookAndFeelOptions.contains("Default")) {
+        		lookAndFeelClassname = defaultZapLook;
+        	}
         }
-        lookAndFeelSet = true;
-
-        String lookAndFeelClassname = System.getProperty("swing.defaultlaf");
-        if (lookAndFeelClassname != null) {
+        System.out.println(lookAndFeelClassname);
+        System.out.println(lookAndFeelOptions);
+       
+        if ( !lookAndFeelClassname.equals("")) {
             try {
                 UIManager.setLookAndFeel(lookAndFeelClassname);
+                
                 return;
             } catch (final UnsupportedLookAndFeelException
                      | ClassNotFoundException
@@ -362,6 +385,18 @@ public class GuiBootstrap extends ZapBootstrap {
                      | IllegalAccessException e) {
                 logger.warn("Failed to set the specified look and feel: " + e.getMessage());
             }
+        }else {
+        	try{
+        		UIManager.setLookAndFeel(defaultZapLook);
+        		
+        		return;
+        	} catch (final UnsupportedLookAndFeelException
+        			| ClassNotFoundException
+        			| ClassCastException
+        			| InstantiationException
+        			| IllegalAccessException e) {
+        		logger.warn("Failed to set the specified look and feel:" + e.getMessage());
+        	}
         }
 
         try {

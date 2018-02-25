@@ -95,6 +95,8 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	private JComboBox<String> timeStampsFormatSelect = null; 
 	private JComboBox<String> fontName = null;
 	
+	private JComboBox<String> lookAndFeel = null;
+	
 	private ZapNumberSpinner largeRequestSize = null;
 	private ZapNumberSpinner largeResponseSize = null;
 	private ZapNumberSpinner fontSize = null;
@@ -113,6 +115,8 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	private JLabel largeRequestLabel = null;
 	private JLabel largeResponseLabel = null;
 	private JLabel fontExampleLabel = null;
+	
+	private JLabel lookAndFeelLabel = null;
 	
     public OptionsViewPanel() {
         super();
@@ -155,7 +159,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 			outputTabTimeStampLabel = new JLabel(Constant.messages.getString("options.display.timestamp.format.outputtabtimestamps.label"));
 			largeRequestLabel = new JLabel(Constant.messages.getString("view.options.label.largeRequestSize"));
 			largeResponseLabel = new JLabel(Constant.messages.getString("view.options.label.largeResponseSize"));
-					
+			lookAndFeelLabel = new JLabel(Constant.messages.getString("view.options.label.lookAndFeel"));
 			outputTabTimeStampExampleLabel = new JLabel(TimeStampUtils.currentDefaultFormattedTimeStamp());
 			showSplashScreenLabel = new JLabel(Constant.messages.getString("view.options.label.showSplashScreen"));
 			
@@ -166,6 +170,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 			panelMisc.add(getDisplaySelect(), 
 					LayoutHelper.getGBC(1, row, 1, 1.0D, new java.awt.Insets(2,2,2,2)));
 
+			
 			row++;
 			JLabel responsePanelPositionLabel = new JLabel(Constant.messages.getString("view.options.label.responsepanelpos"));
 			panelMisc.add(responsePanelPositionLabel, 
@@ -298,6 +303,14 @@ public class OptionsViewPanel extends AbstractParamPanel {
 			panelMisc.add(getScaleImages(),   
 					LayoutHelper.getGBC(1, row, 1, 1.0D, new java.awt.Insets(2,2,2,2)));
 			
+			
+			row++;
+			lookAndFeelLabel.setLabelFor(getlookAndFeelSelect());
+			panelMisc.add(lookAndFeelLabel,
+					LayoutHelper.getGBC(0, row, 1,1.0D, new java.awt.Insets(2,2,2,2)));
+			panelMisc.add(getlookAndFeelSelect(),
+					LayoutHelper.getGBC(1, row, 1, 1.0D,new java.awt.Insets(2,2,2,2)));
+			
 			row++;
 			panelMisc.add(new JLabel(""),   
 					LayoutHelper.getGBC(0, row, 1, 1.0D, 1.0D));
@@ -369,7 +382,19 @@ public class OptionsViewPanel extends AbstractParamPanel {
 		}
 		return displaySelect;
 	}
-
+	
+	
+	private JComboBox<String> getlookAndFeelSelect() {
+		if (lookAndFeel == null) {
+			lookAndFeel = new JComboBox<>();
+	     	lookAndFeel.addItem(Constant.messages.getString("view.options.label.lookAndFeel.default"));
+			lookAndFeel.addItem(Constant.messages.getString("view.options.label.lookAndFeel.native"));
+			lookAndFeel.addItem(Constant.messages.getString("view.options.label.lookAndFeel.cross"));
+		}
+		return lookAndFeel;
+	}
+		
+	
 	private JComboBox<ResponsePanelPositionUI> getResponsePanelPositionComboBox() {
 		if (responsePanelPositionComboBox == null) {
 			responsePanelPositionComboBox = new JComboBox<>();
@@ -543,6 +568,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 		return scaleImages;
 	}
 	
+		
 	@Override
 	public void initParam(Object obj) {
 	    OptionsParam options = (OptionsParam) obj;
@@ -564,6 +590,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	    getFontSize().setValue(options.getViewParam().getFontSize());
 	    getFontName().setSelectedItem(options.getViewParam().getFontName());
 	    getScaleImages().setSelected(options.getViewParam().isScaleImages());
+	    lookAndFeel.setSelectedItem(options.getViewParam().getLookAndFeel());
 	}
 	
 	private void selectResponstPanelPosition(String positionName) {
@@ -602,6 +629,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	    options.getViewParam().setFontSize(getFontSize().getValue());
 	    options.getViewParam().setFontName((String)getFontName().getSelectedItem());
 	    options.getViewParam().setScaleImages(getScaleImages().isSelected());
+	    options.getViewParam().setLookAndFeel((String) lookAndFeel.getSelectedItem()); 
 	}
 
 	@Override

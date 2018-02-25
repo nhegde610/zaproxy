@@ -347,44 +347,30 @@ public class GuiBootstrap extends ZapBootstrap {
      * {@link java.net.InetAddress InetAddress}) preventing some ZAP options from being correctly applied.
      */
     private void setupLookAndFeel() {
-    	String defaultZapLook = System.getProperty("swing.defaultlaf");
-    	String lookAndFeelClassname = "";
+    	
+    	String lookAndFeelClassnameFromCommandline = System.getProperty("swing.defaultlaf");
+    	String lookAndFeelClassnameFromOptions = null;
     	OptionsParam options = Model.getSingleton().getOptionsParam();;
     	String lookAndFeelOptions = options.getViewParam().getLookAndFeel();
-          	
-     	if(defaultZapLook == null) {
-     		lookAndFeelSet = false;
-     	}else{
-     		lookAndFeelSet = true;
-     	}
-     	
-    	
-        if(!lookAndFeelSet) {
+             	  	    	
+        if(lookAndFeelClassnameFromCommandline == null) {
+        	
         	if(lookAndFeelOptions.contains("Native")) {
-        		lookAndFeelClassname = UIManager.getSystemLookAndFeelClassName();
+        		
+        		lookAndFeelClassnameFromOptions = UIManager.getSystemLookAndFeelClassName();
+        		
         	} else if(lookAndFeelOptions.contains("Cross")) {
-        		lookAndFeelClassname = UIManager.getCrossPlatformLookAndFeelClassName();
+        		
+        		lookAndFeelClassnameFromOptions = UIManager.getCrossPlatformLookAndFeelClassName();
+        	
         	} else if(lookAndFeelOptions.contains("Default")) {
-        		lookAndFeelClassname = defaultZapLook;
+        		
+        		lookAndFeelClassnameFromOptions = System.getProperty("swing.defaultlaf");
         	}
         }
-        
-        
-        if ( !lookAndFeelClassname.equals("")) {
-            try {
-                UIManager.setLookAndFeel(lookAndFeelClassname);
-                
-                return;
-            } catch (final UnsupportedLookAndFeelException
-                     | ClassNotFoundException
-                     | ClassCastException
-                     | InstantiationException
-                     | IllegalAccessException e) {
-                logger.warn("Failed to set the specified look and feel: " + e.getMessage());
-            }
-        }else {
+        if ( lookAndFeelClassnameFromCommandline!= null) {
         	try{
-        		UIManager.setLookAndFeel(defaultZapLook);
+        		UIManager.setLookAndFeel(lookAndFeelClassnameFromCommandline);
         		
         		return;
         	} catch (final UnsupportedLookAndFeelException
@@ -395,6 +381,20 @@ public class GuiBootstrap extends ZapBootstrap {
         		logger.warn("Failed to set the specified look and feel:" + e.getMessage());
         	}
         }
+       if (lookAndFeelClassnameFromOptions != null) {
+            try {
+                UIManager.setLookAndFeel(lookAndFeelClassnameFromOptions);
+                
+                return;
+            } catch (final UnsupportedLookAndFeelException
+                     | ClassNotFoundException
+                     | ClassCastException
+                     | InstantiationException
+                     | IllegalAccessException e) {
+                logger.warn("Failed to set the specified look and feel: " + e.getMessage());
+            }
+        }
+     
 
         try {
             // Set the systems Look and Feel

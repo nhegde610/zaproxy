@@ -91,7 +91,6 @@ public class OptionsParamView extends AbstractParam {
 	public static final String FONT_SIZE = "view.fontSize";
 	public static final String SCALE_IMAGES = "view.scaleImages";
 	public static final String SHOW_DEV_WARNING = "view.showDevWarning";
-	
 	public static final String LOOK_AND_FEEL = "view.lookAndFeel";
 	
     private static final String CONFIRM_REMOVE_PROXY_EXCLUDE_REGEX_KEY = "view.confirmRemoveProxyExcludeRegex";
@@ -130,8 +129,7 @@ public class OptionsParamView extends AbstractParam {
     private String fontName = "";
     private boolean scaleImages = true;
     private boolean showDevWarning = true;
-    
-	private String lookAndFeel = "";
+    private String lookAndFeel = "";
 	
     private boolean confirmRemoveProxyExcludeRegex;
     private boolean confirmRemoveScannerExcludeRegex;
@@ -177,7 +175,6 @@ public class OptionsParamView extends AbstractParam {
 	    fontName = getString(FONT_NAME, "");
 	    scaleImages = getBoolean(SCALE_IMAGES, true);
 	    showDevWarning = getBoolean(SHOW_DEV_WARNING, true);
-	   
 	    lookAndFeel = getString(LOOK_AND_FEEL,"");
 	    // Special cases - set via static methods
 	    LargeRequestUtil.setMinContentLength(largeRequestSize);

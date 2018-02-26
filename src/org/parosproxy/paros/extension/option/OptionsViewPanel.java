@@ -31,6 +31,7 @@
 
 package org.parosproxy.paros.extension.option;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -49,10 +50,14 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
+import org.jdesktop.swingx.VerticalLayout;
 import org.parosproxy.paros.Constant;
 import org.parosproxy.paros.model.Model;
 import org.parosproxy.paros.model.OptionsParam;
@@ -77,6 +82,8 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	private static final String TIME_STAMP_FORMAT_TIMEONLY =  Constant.messages.getString("timestamp.format.timeonly");
 	
 	private JPanel panelMisc = null;
+	private JScrollPane viewsScrollPane;
+	private JPanel scrollPanel;
 	
 	private JCheckBox chkShowTabNames = null;
 	private JCheckBox chkProcessImages = null;
@@ -94,7 +101,6 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	private JComboBox<ResponsePanelPositionUI> responsePanelPositionComboBox;
 	private JComboBox<String> timeStampsFormatSelect = null; 
 	private JComboBox<String> fontName = null;
-	
 	private JComboBox<String> lookAndFeel = null;
 	
 	private ZapNumberSpinner largeRequestSize = null;
@@ -115,9 +121,8 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	private JLabel largeRequestLabel = null;
 	private JLabel largeResponseLabel = null;
 	private JLabel fontExampleLabel = null;
-	
 	private JLabel lookAndFeelLabel = null;
-	
+		
     public OptionsViewPanel() {
         super();
  		initialize();
@@ -129,10 +134,25 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	private void initialize() {
         this.setLayout(new CardLayout());
         this.setName(Constant.messages.getString("view.options.title"));
-        this.add(getPanelMisc(), getPanelMisc().getName());
-
+        this.add(getScrollPane(), getPanelMisc().getName());
 	}
 	
+	private JScrollPane getScrollPane() {
+		if (viewsScrollPane == null) {
+			viewsScrollPane = new JScrollPane();
+			viewsScrollPane.setBorder(BorderFactory.createEmptyBorder());
+			viewsScrollPane.setViewportView(getScrollPanel());
+		}
+		return viewsScrollPane;
+	}
+	
+	private JPanel getScrollPanel() {
+		if (scrollPanel == null) {
+			scrollPanel = new JPanel(new VerticalLayout());
+			scrollPanel.add(getPanelMisc());
+		}
+		return scrollPanel;
+	}
 	/**
 	 * This method initializes panelMisc	
 	 * 	
@@ -144,7 +164,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 
 			panelMisc.setLayout(new GridBagLayout());
 		    if (Model.getSingleton().getOptionsParam().getViewParam().getWmUiHandlingOption() == 0) {
-		    	panelMisc.setSize(114, 132);
+		    	panelMisc.setSize(140, 132); 
 		    }
 			panelMisc.setName(Constant.messages.getString("view.options.misc.title"));
 
@@ -159,7 +179,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 			outputTabTimeStampLabel = new JLabel(Constant.messages.getString("options.display.timestamp.format.outputtabtimestamps.label"));
 			largeRequestLabel = new JLabel(Constant.messages.getString("view.options.label.largeRequestSize"));
 			largeResponseLabel = new JLabel(Constant.messages.getString("view.options.label.largeResponseSize"));
-			lookAndFeelLabel = new JLabel(Constant.messages.getString("view.options.label.lookAndFeel"));
+			lookAndFeelLabel = new JLabel(Constant.messages.getString("view.options.label.lookandfeel"));
 			outputTabTimeStampExampleLabel = new JLabel(TimeStampUtils.currentDefaultFormattedTimeStamp());
 			showSplashScreenLabel = new JLabel(Constant.messages.getString("view.options.label.showSplashScreen"));
 			
@@ -302,8 +322,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 					LayoutHelper.getGBC(0, row, 1, 1.0D, new java.awt.Insets(2,2,2,2)));
 			panelMisc.add(getScaleImages(),   
 					LayoutHelper.getGBC(1, row, 1, 1.0D, new java.awt.Insets(2,2,2,2)));
-			
-			
+		
 			row++;
 			lookAndFeelLabel.setLabelFor(getlookAndFeelSelect());
 			panelMisc.add(lookAndFeelLabel,
@@ -314,7 +333,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 			row++;
 			panelMisc.add(new JLabel(""),   
 					LayoutHelper.getGBC(0, row, 1, 1.0D, 1.0D));
-
+								
 		}
 		return panelMisc;
 	}
@@ -382,18 +401,6 @@ public class OptionsViewPanel extends AbstractParamPanel {
 		}
 		return displaySelect;
 	}
-	
-	
-	private JComboBox<String> getlookAndFeelSelect() {
-		if (lookAndFeel == null) {
-			lookAndFeel = new JComboBox<>();
-	     	lookAndFeel.addItem(Constant.messages.getString("view.options.label.lookAndFeel.default"));
-			lookAndFeel.addItem(Constant.messages.getString("view.options.label.lookAndFeel.native"));
-			lookAndFeel.addItem(Constant.messages.getString("view.options.label.lookAndFeel.cross"));
-		}
-		return lookAndFeel;
-	}
-		
 	
 	private JComboBox<ResponsePanelPositionUI> getResponsePanelPositionComboBox() {
 		if (responsePanelPositionComboBox == null) {
@@ -567,7 +574,21 @@ public class OptionsViewPanel extends AbstractParamPanel {
 		}
 		return scaleImages;
 	}
-	
+		
+	@SuppressWarnings("unchecked")
+	private JComboBox<String> getlookAndFeelSelect() {
+		if (lookAndFeel == null) {
+			lookAndFeel = new JComboBox<String>();
+			lookAndFeel.setMaximumRowCount(5);
+			lookAndFeel.setRenderer(new JComboBoxLookAndFeelRenderer());
+			UIManager.LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
+			lookAndFeel.addItem(" ");	// Default look of Zap
+			for (UIManager.LookAndFeelInfo look : looks){
+				lookAndFeel.addItem(look.getClassName());
+			}
+		}
+		return lookAndFeel;
+	}
 		
 	@Override
 	public void initParam(Object obj) {
@@ -590,7 +611,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	    getFontSize().setValue(options.getViewParam().getFontSize());
 	    getFontName().setSelectedItem(options.getViewParam().getFontName());
 	    getScaleImages().setSelected(options.getViewParam().isScaleImages());
-	    lookAndFeel.setSelectedItem(options.getViewParam().getLookAndFeel());
+	    getlookAndFeelSelect().setSelectedItem(options.getViewParam().getLookAndFeel());
 	}
 	
 	private void selectResponstPanelPosition(String positionName) {
@@ -629,7 +650,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	    options.getViewParam().setFontSize(getFontSize().getValue());
 	    options.getViewParam().setFontName((String)getFontName().getSelectedItem());
 	    options.getViewParam().setScaleImages(getScaleImages().isSelected());
-	    options.getViewParam().setLookAndFeel((String) lookAndFeel.getSelectedItem()); 
+	    options.getViewParam().setLookAndFeel((String)getlookAndFeelSelect().getSelectedItem()); 
 	}
 
 	@Override
@@ -653,6 +674,24 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	        	renderer.setFont(FontUtils.getFont(FontUtils.Size.standard));
 	        }
 	        return renderer;
+	    }
+	}
+	
+	@SuppressWarnings("serial")
+	private class JComboBoxLookAndFeelRenderer extends BasicComboBoxRenderer {
+	    protected DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
+
+	    @Override
+	    @SuppressWarnings("rawtypes")
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	        JLabel LookAndFeelrenderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected,cellHasFocus);
+	        UIManager.LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels(); 
+	        if (looks != null) {
+	        	LookAndFeelrenderer.setText("");
+	        for(UIManager.LookAndFeelInfo look : looks)
+	        	LookAndFeelrenderer.setText(look.getName());
+	        } 
+	        return LookAndFeelrenderer;
 	    }
 	}
 

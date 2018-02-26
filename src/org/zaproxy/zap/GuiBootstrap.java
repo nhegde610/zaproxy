@@ -183,7 +183,7 @@ public class GuiBootstrap extends ZapBootstrap {
         OptionsParamView viewParam = options.getViewParam();
 
         FontUtils.setDefaultFont(viewParam.getFontName(), viewParam.getFontSize());
-
+        
         setupLocale(options);
 
         if (viewParam.isUseSystemsLocaleForFormat()) {
@@ -349,26 +349,10 @@ public class GuiBootstrap extends ZapBootstrap {
     private void setupLookAndFeel() {
     	
     	String lookAndFeelClassnameFromCommandline = System.getProperty("swing.defaultlaf");
-    	String lookAndFeelClassnameFromOptions = null;
-    	OptionsParam options = Model.getSingleton().getOptionsParam();;
-    	String lookAndFeelOptions = options.getViewParam().getLookAndFeel();
-             	  	    	
-        if(lookAndFeelClassnameFromCommandline == null) {
-        	
-        	if(lookAndFeelOptions.contains("Native")) {
-        		
-        		lookAndFeelClassnameFromOptions = UIManager.getSystemLookAndFeelClassName();
-        		
-        	} else if(lookAndFeelOptions.contains("Cross")) {
-        		
-        		lookAndFeelClassnameFromOptions = UIManager.getCrossPlatformLookAndFeelClassName();
-        	
-        	} else if(lookAndFeelOptions.contains("Default")) {
-        		
-        		lookAndFeelClassnameFromOptions = System.getProperty("swing.defaultlaf");
-        	}
-        }
-        if ( lookAndFeelClassnameFromCommandline!= null) {
+    	OptionsParam options = Model.getSingleton().getOptionsParam();
+    	String lookAndFeelClassnameFromOptions = options.getViewParam().getLookAndFeel();
+    	           	
+       if ( lookAndFeelClassnameFromCommandline!= null) {
         	try{
         		UIManager.setLookAndFeel(lookAndFeelClassnameFromCommandline);
         		
@@ -395,14 +379,14 @@ public class GuiBootstrap extends ZapBootstrap {
             }
         }
      
-
+       
         try {
             // Set the systems Look and Feel
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
             if (Constant.isMacOsX()) {
                 OsXGui.setup();
-            } else {
+            }else {
                 // Set Nimbus LaF if available
                 for (final LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                     if ("Nimbus".equals(info.getName())) {
@@ -416,7 +400,7 @@ public class GuiBootstrap extends ZapBootstrap {
                  | InstantiationException
                  | IllegalAccessException e) {
             logger.warn("Failed to set the \"default\" look and feel: " + e.getMessage());
-        }
+        } 
     }
 
     /**

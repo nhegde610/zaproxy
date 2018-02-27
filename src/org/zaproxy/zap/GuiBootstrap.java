@@ -73,13 +73,6 @@ public class GuiBootstrap extends ZapBootstrap {
 
     private final Logger logger = Logger.getLogger(GuiBootstrap.class);
 
-    /**
-     * Flag that indicates whether or not the look and feel was already set.
-     * 
-     * @see #setupLookAndFeel()
-     */
-    private boolean lookAndFeelSet;
-
     public GuiBootstrap(CommandLine cmdLineArgs) {
         super(cmdLineArgs);
     }
@@ -350,8 +343,17 @@ public class GuiBootstrap extends ZapBootstrap {
     	
     	String lookAndFeelClassnameFromCommandline = System.getProperty("swing.defaultlaf");
     	OptionsParam options = Model.getSingleton().getOptionsParam();
-    	String lookAndFeelClassnameFromOptions = options.getViewParam().getLookAndFeel();
-    	           	
+    	String lookAndFeelnameFromOptions = options.getViewParam().getLookAndFeel();
+    	String lookAndFeelClassnameFromOptions = "";
+    	UIManager.LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
+    	
+    	for(UIManager.LookAndFeelInfo index : looks) {
+    		if(index.getName().equals(lookAndFeelnameFromOptions)) {
+    			lookAndFeelClassnameFromOptions = index.getClassName();
+    			break;
+    		}
+    	}
+    	
        if ( lookAndFeelClassnameFromCommandline!= null) {
         	try{
         		UIManager.setLookAndFeel(lookAndFeelClassnameFromCommandline);
@@ -378,8 +380,7 @@ public class GuiBootstrap extends ZapBootstrap {
                 logger.warn("Failed to set the specified look and feel: " + e.getMessage());
             }
         }
-     
-       
+            
         try {
             // Set the systems Look and Feel
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

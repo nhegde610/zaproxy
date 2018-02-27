@@ -390,19 +390,20 @@ public class CoreAPI extends ApiImplementor implements SessionListener {
 			
 			final boolean overwrite = getParam(params, PARAM_OVERWRITE_SESSION, false);
 			
-			boolean sameSession = false;
-			if (!session.isNewState()) {
-				try {
-					sameSession = Files.isSameFile(Paths.get(session.getFileName()), sessionPath);
-				} catch (IOException e) {
-					logger.error("Failed to check if same session path:", e);
-					throw new ApiException(ApiException.Type.INTERNAL_ERROR, e.getMessage());
+			if (Files.exists(sessionPath)) {
+				boolean sameSession = false;
+				if (overwrite && !session.isNewState()) {
+					try {
+						sameSession = Files.isSameFile(Paths.get(session.getFileName()), sessionPath);
+					} catch (IOException e) {
+						logger.error("Failed to check if same session path:", e);
+						throw new ApiException(ApiException.Type.INTERNAL_ERROR, e.getMessage());
+					}
 				}
-			}
-			
-			if (Files.exists(sessionPath) && (!overwrite || sameSession)) {
-				throw new ApiException(ApiException.Type.ALREADY_EXISTS,
-						filename);
+
+				if (!overwrite || sameSession) {
+					throw new ApiException(ApiException.Type.ALREADY_EXISTS, filename);
+				}
 			}
 			this.savingSession = true;
 			try {
@@ -1577,13 +1578,13 @@ public class CoreAPI extends ApiImplementor implements SessionListener {
 		List<Alert> alerts = new ArrayList<>();
 		try {
 			TableAlert tableAlert = Model.getSingleton().getDb().getTableAlert();
-        	// TODO this doesnt work, but should be used when its fixed :/
+        	// TODO this doesn't work, but should be used when its fixed :/
 			//Vector<Integer> v = tableAlert.getAlertListBySession(Model.getSingleton().getSession().getSessionId());
 			Vector<Integer> v = tableAlert.getAlertList();
 
 			PaginationConstraintsChecker pcc = new PaginationConstraintsChecker(start, count);
 			for (int i = 0; i < v.size(); i++) {
-				int alertId = v.get(i).intValue();
+				int alertId = v.get(i);
 				RecordAlert recAlert = tableAlert.read(alertId);
 				Alert alert = new Alert(recAlert);
 
@@ -1624,7 +1625,7 @@ public class CoreAPI extends ApiImplementor implements SessionListener {
 
 			PaginationConstraintsChecker pcc = new PaginationConstraintsChecker(start, count);
 			for (Integer id : historyIds) {
-				RecordHistory recHistory = tableHistory.read(id.intValue());
+				RecordHistory recHistory = tableHistory.read(id);
 
 				HttpMessage msg = recHistory.getHttpMessage();
 

@@ -22,8 +22,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
@@ -55,7 +53,7 @@ import org.zaproxy.zap.utils.FontUtils;
 import org.zaproxy.zap.view.HighlightSearchEntry;
 import org.zaproxy.zap.view.HighlighterManager;
 
-public abstract class HttpPanelSyntaxHighlightTextArea extends RSyntaxTextArea implements Observer {
+public abstract class HttpPanelSyntaxHighlightTextArea extends RSyntaxTextArea {
 
 	private static final long serialVersionUID = -9082089105656842054L;
 
@@ -170,7 +168,19 @@ public abstract class HttpPanelSyntaxHighlightTextArea extends RSyntaxTextArea i
 	private void initHighlighter() {
 		HighlighterManager highlighter = HighlighterManager.getInstance();
 		
-		highlighter.addObserver(this);
+		highlighter.addHighlighterManagerListener(e -> {
+			switch (e.getType()) {
+			case HIGHLIGHTS_SET:
+			case HIGHLIGHT_REMOVED:
+				removeAllHighlights();
+				highlightAll();
+				break;
+			case HIGHLIGHT_ADDED:
+				highlightEntryParser(e.getHighlight());
+				break;
+			}
+			this.invalidate();
+		});
 		
 		if (message != null) {
 			highlightAll();
@@ -253,24 +263,6 @@ public abstract class HttpPanelSyntaxHighlightTextArea extends RSyntaxTextArea i
 		Highlighter hilite = this.getHighlighter();
 		hilite.removeAllHighlights();
 	}
-
-	@Override
-	// HighlighterManager called us
-	// there is either
-	// - a new highlight
-	// - something other (added several, deleted, ...).
-	public void update(Observable arg0, Object arg1) {
-		if (arg1 == null) {
-			// Re-highlight everything
-			removeAllHighlights();
-			highlightAll();
-		} else {
-			// Add specific highlight
-			HighlightSearchEntry token = (HighlightSearchEntry) arg1;
-			highlightEntryParser(token);
-		}
-		this.invalidate();
-	}
 	
 	public void setMessage(Message aMessage) {
 		this.message = aMessage;
@@ -314,35 +306,35 @@ public abstract class HttpPanelSyntaxHighlightTextArea extends RSyntaxTextArea i
 	}
 	
 	public void saveConfiguration(String key, FileConfiguration fileConfiguration) {
-		fileConfiguration.setProperty(key + ANTI_ALIASING, Boolean.valueOf(this.getAntiAliasingEnabled()));
+		fileConfiguration.setProperty(key + ANTI_ALIASING, this.getAntiAliasingEnabled());
 		
 		Component c = getParent();
 		if (c instanceof JViewport) {
 			c = c.getParent();
 			if (c instanceof RTextScrollPane) {
 				final RTextScrollPane scrollPane = (RTextScrollPane)c;
-				fileConfiguration.setProperty(key + SHOW_LINE_NUMBERS, Boolean.valueOf(scrollPane.getLineNumbersEnabled()));
+				fileConfiguration.setProperty(key + SHOW_LINE_NUMBERS, scrollPane.getLineNumbersEnabled());
 
 				if (isCodeFoldingAllowed()) {
-					fileConfiguration.setProperty(key + CODE_FOLDING, Boolean.valueOf(this.isCodeFoldingEnabled()));
+					fileConfiguration.setProperty(key + CODE_FOLDING, this.isCodeFoldingEnabled());
 				}
 			}
 		}
 		
-		fileConfiguration.setProperty(key + WORD_WRAP, Boolean.valueOf(this.getLineWrap()));
+		fileConfiguration.setProperty(key + WORD_WRAP, this.getLineWrap());
 		
-		fileConfiguration.setProperty(key + HIGHLIGHT_CURRENT_LINE, Boolean.valueOf(this.getHighlightCurrentLine()));
-		fileConfiguration.setProperty(key + FADE_CURRENT_HIGHLIGHT_LINE, Boolean.valueOf(this.getFadeCurrentLineHighlight()));
+		fileConfiguration.setProperty(key + HIGHLIGHT_CURRENT_LINE, this.getHighlightCurrentLine());
+		fileConfiguration.setProperty(key + FADE_CURRENT_HIGHLIGHT_LINE, this.getFadeCurrentLineHighlight());
 		
-		fileConfiguration.setProperty(key + SHOW_WHITESPACE_CHARACTERS, Boolean.valueOf(this.isWhitespaceVisible()));
-		fileConfiguration.setProperty(key + SHOW_NEWLINE_CHARACTERS, Boolean.valueOf(this.getEOLMarkersVisible()));
+		fileConfiguration.setProperty(key + SHOW_WHITESPACE_CHARACTERS, this.isWhitespaceVisible());
+		fileConfiguration.setProperty(key + SHOW_NEWLINE_CHARACTERS, this.getEOLMarkersVisible());
 		
-		fileConfiguration.setProperty(key + MARK_OCCURRENCES, Boolean.valueOf(this.getMarkOccurrences()));
+		fileConfiguration.setProperty(key + MARK_OCCURRENCES, this.getMarkOccurrences());
 		
-		fileConfiguration.setProperty(key + ROUNDED_SELECTION_EDGES, Boolean.valueOf(this.getRoundedSelectionEdges()));
+		fileConfiguration.setProperty(key + ROUNDED_SELECTION_EDGES, this.getRoundedSelectionEdges());
 		
-		fileConfiguration.setProperty(key + BRACKET_MATCHING, Boolean.valueOf(this.isBracketMatchingEnabled()));
-		fileConfiguration.setProperty(key + ANIMATED_BRACKET_MATCHING, Boolean.valueOf(this.getAnimateBracketMatching()));
+		fileConfiguration.setProperty(key + BRACKET_MATCHING, this.isBracketMatchingEnabled());
+		fileConfiguration.setProperty(key + ANIMATED_BRACKET_MATCHING, this.getAnimateBracketMatching());
 	}
 	
 	public Vector<SyntaxStyle> getSyntaxStyles() {

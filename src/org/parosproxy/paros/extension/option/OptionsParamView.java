@@ -37,6 +37,7 @@
 // ZAP: 2017/05/29 Add option to use system's locale for formatting.
 // ZAP: 2017/09/26 Use helper methods to read the configurations.
 // ZAP: 2018/01/25 Remove unused constant LOCALES.
+// ZAP: 2018/02/14 Remove unnecessary boxing / unboxing
 // ZAP: 2018/02/27 Added support for selecting the look and feel.
 
 package org.parosproxy.paros.extension.option;
@@ -502,7 +503,7 @@ public class OptionsParamView extends AbstractParam {
 
     public void setConfirmRemoveProxyExcludeRegex(boolean confirmRemove) {
         this.confirmRemoveProxyExcludeRegex = confirmRemove;
-        getConfig().setProperty(CONFIRM_REMOVE_PROXY_EXCLUDE_REGEX_KEY, Boolean.valueOf(confirmRemove));
+        getConfig().setProperty(CONFIRM_REMOVE_PROXY_EXCLUDE_REGEX_KEY, confirmRemove);
     }
 
     public boolean isConfirmRemoveScannerExcludeRegex() {
@@ -511,7 +512,7 @@ public class OptionsParamView extends AbstractParam {
 
     public void setConfirmRemoveScannerExcludeRegex(boolean confirmRemove) {
         this.confirmRemoveScannerExcludeRegex = confirmRemove;
-        getConfig().setProperty(CONFIRM_REMOVE_SCANNER_EXCLUDE_REGEX_KEY, Boolean.valueOf(confirmRemove));
+        getConfig().setProperty(CONFIRM_REMOVE_SCANNER_EXCLUDE_REGEX_KEY, confirmRemove);
     }
 
     public boolean isConfirmRemoveSpiderExcludeRegex() {
@@ -520,7 +521,7 @@ public class OptionsParamView extends AbstractParam {
 
     public void setConfirmRemoveSpiderExcludeRegex(boolean confirmRemove) {
         this.confirmRemoveSpiderExcludeRegex = confirmRemove;
-        getConfig().setProperty(CONFIRM_REMOVE_SPIDER_EXCLUDE_REGEX_KEY, Boolean.valueOf(confirmRemove));
+        getConfig().setProperty(CONFIRM_REMOVE_SPIDER_EXCLUDE_REGEX_KEY, confirmRemove);
     }
 
     /**

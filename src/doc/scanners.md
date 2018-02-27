@@ -152,6 +152,7 @@ Scanners:
 40030   Backslash Powered Scanner
 40031   Cross Site Scripting - Detection by Callback
 40032   .htaccess Scanner
+40033	NoSQL Injection
 
 50000   Active Scan scripts
 50001   Passive Scan scripts
@@ -166,6 +167,7 @@ Scanners:
 
 90001   Insecure JSF ViewState
 90011   Charset Mismatch
+90017	XSLT Injection
 90018   SQL Injection SQLMap
 90019   Code Injection
 90020   Command Injection

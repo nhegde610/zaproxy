@@ -201,7 +201,7 @@ public class TabbedPanel2 extends TabbedPanel {
 			if (this.removedTabList.contains(c)) {
 				
 				if (c instanceof AbstractPanel) {
-					// Dont use the addTab(AbstractPanel) methods as we need to force visibility
+					// Don't use the addTab(AbstractPanel) methods as we need to force visibility
 					AbstractPanel panel = (AbstractPanel)c;
 					this.addTab(c.getName(), panel.getIcon(), panel, panel.isHideable(), true, panel.getTabIndex());
 				} else {
@@ -209,7 +209,7 @@ public class TabbedPanel2 extends TabbedPanel {
 					int index = this.fullTabList.indexOf(c);
 					while (index >= 0) {
 						if (index > 0 && ! this.removedTabList.contains(this.fullTabList.get(index -1))) {
-							// Found the first preceding tab that isnt hidden
+							// Found the first preceding tab that isn't hidden
 							break;
 						}
 						index--;
@@ -239,8 +239,21 @@ public class TabbedPanel2 extends TabbedPanel {
 	}
 
 	public void addTab(AbstractPanel panel) {
+	    addTab(panel, panel.getTabIndex());
+	}
+
+	/**
+	 * Adds a tab with the given panel at the given index.
+	 * <p>
+	 * This method effectively overrides the {@link AbstractPanel#getTabIndex() index of the panel}.
+	 * 
+	 * @param panel the panel for the added tab.
+	 * @param index the index at the tabbed pane.
+	 * @since TODO add version
+	 */
+	public void addTab(AbstractPanel panel, int index) {
 		boolean visible = ! panel.isHideable() || this.isTabPinned(panel);
-		this.addTab(panel.getName(), panel.getIcon(), panel, panel.isHideable(), visible, panel.getTabIndex());
+		this.addTab(panel.getName(), panel.getIcon(), panel, panel.isHideable(), visible, index);
 		
 	}
 

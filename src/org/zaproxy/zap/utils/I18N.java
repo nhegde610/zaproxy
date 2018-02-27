@@ -95,7 +95,7 @@ public class I18N {
     
     /**
      * Returns the specified char from the language file. 
-     * As these are typically used for mnemnoics the 'null' char is returned if the key is not defined 
+     * As these are typically used for mnemonics the 'null' char is returned if the key is not defined
      * @param key the key of the char
      * @return the char read, or null char if not found
      */
@@ -125,8 +125,7 @@ public class I18N {
 			return;
 		}
     	this.locale = locale;
-    	this.stdMessages = ResourceBundle.getBundle(Constant.MESSAGES_PREFIX, locale,
-                ResourceBundle.Control.getControl(ResourceBundle.Control.FORMAT_PROPERTIES));
+    	this.stdMessages = ResourceBundle.getBundle(Constant.MESSAGES_PREFIX, locale, new ZapResourceBundleControl());
     }
 
     

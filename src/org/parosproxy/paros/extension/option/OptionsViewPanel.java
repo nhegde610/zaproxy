@@ -580,11 +580,9 @@ public class OptionsViewPanel extends AbstractParamPanel {
 		if (lookAndFeel == null) {
 			lookAndFeel = new JComboBox<String>();
 			lookAndFeel.setMaximumRowCount(5);
-			//lookAndFeel.setRenderer(new JComboBoxLookAndFeelRenderer());
 			UIManager.LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
 			lookAndFeel.addItem(" ");	// Default look of Zap
 			for (UIManager.LookAndFeelInfo look : looks){
-				//lookAndFeel.addItem(look.getClassName());  
 				lookAndFeel.addItem(look.getName());
 			}
 		}
@@ -677,22 +675,6 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	        return renderer;
 	    }
 	}
-	/**
-	@SuppressWarnings("serial")
-	private class JComboBoxLookAndFeelRenderer extends DefaultListCellRenderer {
-		protected DefaultListCellRenderer lookAndFeelRenderer = new DefaultListCellRenderer();
-		
-	    @Override
-	    @SuppressWarnings("rawtypes")
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-	    	JLabel lookAndFeelrendererComponent = (JLabel) lookAndFeelRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-	        UIManager.LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
-	        if (index > -1 && index < looks.length) {
-	        lookAndFeelrendererComponent.setText((looks[index].getName()));
-	        }
-	        return lookAndFeelrendererComponent;
-	    }
-	} **/
 
 	private static class ResponsePanelPositionUI {
 

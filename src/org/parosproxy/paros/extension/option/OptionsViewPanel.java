@@ -28,10 +28,10 @@
 // ZAP: 2016/04/04 Do not require a restart to show/hide the tool bar
 // ZAP: 2016/04/06 Fix layouts' issues
 // ZAP: 2017/01/09 Remove method no longer needed.
+// ZAP: 2018/02/27 Added Config Options for look and feel. Added Scrollbar to the panel.
 
 package org.parosproxy.paros.extension.option;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -575,16 +575,17 @@ public class OptionsViewPanel extends AbstractParamPanel {
 		return scaleImages;
 	}
 		
-	@SuppressWarnings("unchecked")
+	
 	private JComboBox<String> getlookAndFeelSelect() {
 		if (lookAndFeel == null) {
 			lookAndFeel = new JComboBox<String>();
 			lookAndFeel.setMaximumRowCount(5);
-			lookAndFeel.setRenderer(new JComboBoxLookAndFeelRenderer());
+			//lookAndFeel.setRenderer(new JComboBoxLookAndFeelRenderer());
 			UIManager.LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
 			lookAndFeel.addItem(" ");	// Default look of Zap
 			for (UIManager.LookAndFeelInfo look : looks){
-				lookAndFeel.addItem(look.getClassName());
+				//lookAndFeel.addItem(look.getClassName());  
+				lookAndFeel.addItem(look.getName());
 			}
 		}
 		return lookAndFeel;
@@ -676,24 +677,22 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	        return renderer;
 	    }
 	}
-	
+	/**
 	@SuppressWarnings("serial")
-	private class JComboBoxLookAndFeelRenderer extends BasicComboBoxRenderer {
-	    protected DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
-
+	private class JComboBoxLookAndFeelRenderer extends DefaultListCellRenderer {
+		protected DefaultListCellRenderer lookAndFeelRenderer = new DefaultListCellRenderer();
+		
 	    @Override
 	    @SuppressWarnings("rawtypes")
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-	        JLabel LookAndFeelrenderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected,cellHasFocus);
-	        UIManager.LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels(); 
-	        if (looks != null) {
-	        	LookAndFeelrenderer.setText("");
-	        for(UIManager.LookAndFeelInfo look : looks)
-	        	LookAndFeelrenderer.setText(look.getName());
-	        } 
-	        return LookAndFeelrenderer;
+	    	JLabel lookAndFeelrendererComponent = (JLabel) lookAndFeelRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+	        UIManager.LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
+	        if (index > -1 && index < looks.length) {
+	        lookAndFeelrendererComponent.setText((looks[index].getName()));
+	        }
+	        return lookAndFeelrendererComponent;
 	    }
-	}
+	} **/
 
 	private static class ResponsePanelPositionUI {
 

@@ -37,6 +37,7 @@
 // ZAP: 2017/05/29 Add option to use system's locale for formatting.
 // ZAP: 2017/09/26 Use helper methods to read the configurations.
 // ZAP: 2018/01/25 Remove unused constant LOCALES.
+// ZAP: 2018/02/27 Added support for selecting the look and feel.
 
 package org.parosproxy.paros.extension.option;
 
@@ -471,6 +472,7 @@ public class OptionsParamView extends AbstractParam {
 	public String getLookAndFeel() {
 		return this.lookAndFeel;
 	}
+	
 	public void setLookAndFeel(String lookAndFeel) {
 		this.lookAndFeel = lookAndFeel;
 		getConfig().setProperty(LOOK_AND_FEEL, lookAndFeel);

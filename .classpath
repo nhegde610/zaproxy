@@ -48,5 +48,7 @@
 	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.4.1.jar"/>
 	<classpathentry kind="lib" path="lib/ice4j-1.0.jar"/>
+	<classpathentry kind="lib" path="/home/niranjan/git/zaproxy/swingexplorer/swexpl.jar"/>
+	<classpathentry kind="lib" path="/home/niranjan/git/zaproxy/swingexplorer/swag.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

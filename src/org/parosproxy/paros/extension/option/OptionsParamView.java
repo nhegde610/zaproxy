@@ -132,8 +132,7 @@ public class OptionsParamView extends AbstractParam {
     private boolean scaleImages = true;
     private boolean showDevWarning = true;
     private String lookAndFeel = "";
-	
-    private boolean confirmRemoveProxyExcludeRegex;
+	private boolean confirmRemoveProxyExcludeRegex;
     private boolean confirmRemoveScannerExcludeRegex;
     private boolean confirmRemoveSpiderExcludeRegex;
 

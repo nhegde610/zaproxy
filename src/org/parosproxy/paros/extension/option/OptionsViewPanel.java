@@ -51,7 +51,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -82,7 +81,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	private static final String TIME_STAMP_FORMAT_TIMEONLY =  Constant.messages.getString("timestamp.format.timeonly");
 	
 	private JPanel panelMisc = null;
-	private JScrollPane viewsScrollPane;
+	private JScrollPane mainScrollPane;
 	private JPanel scrollPanel;
 	
 	private JCheckBox chkShowTabNames = null;
@@ -134,25 +133,25 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	private void initialize() {
         this.setLayout(new CardLayout());
         this.setName(Constant.messages.getString("view.options.title"));
-        this.add(getScrollPane(), getPanelMisc().getName());
+        this.add(getmainScrollPane(), getPanelMisc().getName());
 	}
 	
-	private JScrollPane getScrollPane() {
-		if (viewsScrollPane == null) {
-			viewsScrollPane = new JScrollPane();
-			viewsScrollPane.setBorder(BorderFactory.createEmptyBorder());
-			viewsScrollPane.setViewportView(getScrollPanel());
+	private JScrollPane getmainScrollPane() {
+		if (mainScrollPane == null) {
+			mainScrollPane = new JScrollPane();
+			mainScrollPane.setBorder(BorderFactory.createEmptyBorder());
+			mainScrollPane.setViewportView(getPanelMisc());
 		}
-		return viewsScrollPane;
+		return mainScrollPane;
 	}
 	
-	private JPanel getScrollPanel() {
+	/**private JPanel getScrollPanel() {
 		if (scrollPanel == null) {
 			scrollPanel = new JPanel(new VerticalLayout());
 			scrollPanel.add(getPanelMisc());
 		}
 		return scrollPanel;
-	}
+	}**/
 	/**
 	 * This method initializes panelMisc	
 	 * 	
@@ -332,8 +331,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 			
 			row++;
 			panelMisc.add(new JLabel(""),   
-					LayoutHelper.getGBC(0, row, 1, 1.0D, 1.0D));
-								
+					LayoutHelper.getGBC(0, row, 1, 1.0D, 1.0D));			
 		}
 		return panelMisc;
 	}
@@ -575,13 +573,12 @@ public class OptionsViewPanel extends AbstractParamPanel {
 		return scaleImages;
 	}
 		
-	
 	private JComboBox<String> getlookAndFeelSelect() {
 		if (lookAndFeel == null) {
 			lookAndFeel = new JComboBox<String>();
 			lookAndFeel.setMaximumRowCount(5);
 			UIManager.LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
-			lookAndFeel.addItem(" ");	// Default look of Zap
+			lookAndFeel.addItem(" ");	// Default look 
 			for (UIManager.LookAndFeelInfo look : looks){
 				lookAndFeel.addItem(look.getName());
 			}
@@ -675,7 +672,7 @@ public class OptionsViewPanel extends AbstractParamPanel {
 	        return renderer;
 	    }
 	}
-
+	
 	private static class ResponsePanelPositionUI {
 
 		private final String name;
